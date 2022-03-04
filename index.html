@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>HTML5 Canvas</title>
+  </head>
+  <body>
+    <canvas id="draw" width="800" height="800"></canvas>
+    <script>
+      const canvas = document.querySelector("#draw");
+      //tells that the canvas elements is dealing with 2d graphics
+      const ctx = canvas.getContext("2d");
+      //sets the width and height of the canvas element
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      //color of the line
+      ctx.strokeStyle = "#BADA55";
+      //the lines will be joined together by round edges
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      //lenght of the line
+      ctx.lineWidth = 20;
+      //ctx.globalCompositeOperation = "multiply";
+
+      //isnt drawing
+      let isDrawing = false;
+      //default line positions
+      let lastX = 0;
+      let lastY = 0;
+      //color variable
+      let hue = 0;
+      //line width varaible
+      let width = 0;
+      //tells whether to increment the width downward or upward
+      let direction = true;
+
+      function draw(e) {
+        //if drawing is not currently enabled, return back
+        if (!isDrawing) return; // stop the fn from running when they are not moused down
+        console.log(e);
+        //sets the color
+        ctx.strokeStyle = `hsl(${hue}, 100%, 50%`
+        //sets the width
+        ctx.lineWidth = width;
+        //begins the line path
+        ctx.beginPath();
+        // start from
+        ctx.moveTo(lastX, lastY);
+        // go to
+        ctx.lineTo(e.offsetX, e.offsetY);
+        //makes the stroke
+        ctx.stroke();
+       
+        //sets the positions
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+        
+        //changes the color constantly
+        hue++;
+        if(hue >= 360){
+          hue = 0;
+          
+        }
+
+        //changes the width of the lines
+        if(width >= 100){
+          direction = false;
+        } else if(width <= 0){
+          direction = true;
+        }
+
+        if(direction){
+          width++;
+
+        }else {
+          width--;
+        }
+
+      }
+
+      //when the canvas is clicked, drawing is enabled
+      canvas.addEventListener("mousedown", () => {
+        isDrawing = true;
+        //sets the last positions to your current position
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+      });
+
+      //
+      canvas.addEventListener('mousedown', (e) => {
+  isDrawing = true;
+  [lastX, lastY] = [e.offsetX, e.offsetY];
+});
+
+//when the mouse is hovered over, draw
+canvas.addEventListener('mousemove', draw);
+//when you stop clicking, drawing is disabled
+canvas.addEventListener('mouseup', () => isDrawing = false);
+canvas.addEventListener('mouseout', () => isDrawing = false);
+    </script>
+
+    <style>
+      html,
+      body {
+        margin: 0;
+      }
+    </style>
+  </body>
+</html>
